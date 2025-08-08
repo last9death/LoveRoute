@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoveRoutes - Романтические маршруты по России</title>
+    <meta name="description" content="Откройте для себя самые романтические места России. Создайте незабываемые воспоминания с нашим Tinder-подобным интерфейсом для выбора идеальных мест для свиданий.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- User Info Bar -->
+        <div id="userInfo" class="user-info hidden">
+            <span id="userName"></span>
+            <button class="logout-btn" onclick="logout()">Выйти</button>
+        </div>
+
+        <!-- Landing Screen -->
+        <div id="landingScreen" class="screen">
+            <div class="landing-container">
+                <!-- Hero Section -->
+                <div class="hero-section">
+                    <div class="logo-container">
+                        <div class="heart-logo">♥</div>
+                    </div>
+                    <h1 class="main-title">LoveRoutes</h1>
+                    <p class="subtitle">Романтические маршруты по России</p>
+                </div>
+
+                <!-- Features -->
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌟</div>
+                        <div class="feature-content">
+                            <h3>420+ локаций</h3>
+                            <p>Проверенные романтические места</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🗺️</div>
+                        <div class="feature-content">
+                            <h3>21 город России</h3>
+                            <p>От Москвы до Владивостока</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✨</div>
+                        <div class="feature-content">
+                            <h3>Делитесь с парой</h3>
+                            <p>Планируйте путешествия вместе</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <button class="cta-button" onclick="showAuth()">
+                    Начать путешествие
+                    <span class="arrow">→</span>
+                </button>
+
+                <p class="disclaimer">
+                    Откройте для себя самые романтические места России и создайте незабываемые воспоминания
+                </p>
+            </div>
+        </div>
+
+        <!-- Auth Modal -->
+        <div id="authModal" class="modal hidden">
+            <div class="modal-content">
+                <button class="modal-close" onclick="hideAuth()">×</button>
+                
+                <div class="auth-header">
+                    <div class="heart-logo small">♥</div>
+                    <h2>Добро пожаловать</h2>
+                </div>
+
+                <!-- Auth Tabs -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Вход</button>
+                    <button class="auth-tab" data-tab="register">Регистрация</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <button type="submit" class="form-button">Войти</button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" class="auth-form hidden">
+                    <div class="form-group">
+                        <label>Имя</label>
+                        <input type="text" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Фамилия</label>
+                        <input type="text" name="lastName">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" name="password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label>Выберите город</label>
+                        <select name="selectedCity" required>
+                            <option value="">Выберите город</option>
+                            {% for city in cities %}
+                            <option value="{{ city.id }}">{{ city.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="form-button">Создать аккаунт</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- City Selection Screen -->
+        <div id="cityScreen" class="screen hidden">
+            <div class="city-selection-container">
+                <div class="header">
+                    <button class="back-button" onclick="showLanding()">←</button>
+                    <div class="heart-logo small">♥</div>
+                    <h2>Выберите город</h2>
+                    <p>Для просмотра романтических мест</p>
+                </div>
+
+                <div class="cities-grid">
+                    {% for city in cities %}
+                    <div class="city-card" onclick="selectCity('{{ city.id }}', '{{ city.name }}')">
+                        <div class="city-icon">🏙️</div>
+                        <h3>{{ city.name }}</h3>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Swipe Screen -->
+        <div id="swipeScreen" class="screen hidden">
+            <div class="swipe-container">
+                <!-- Header -->
+                <div class="swipe-header">
+                    <button class="back-button" onclick="showCitySelection()">←</button>
+                    <div class="city-info">
+                        <div class="heart-logo tiny">♥</div>
+                        <div>
+                            <h3 id="currentCityName">Романтические места</h3>
+                            <p id="placeCounter">Место 1 из 20</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Stack -->
+                <div class="card-stack" id="cardStack">
+                    <div class="loading">Загружаем места...</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn skip-btn" onclick="skipPlace()">
+                        <span>✕</span>
+                    </button>
+                    <button class="action-btn like-btn" onclick="likePlace()">
+                        <span>♥</span>
+                    </button>
+                    <button class="action-btn info-btn" onclick="showPlaceInfo()">
+                        <span>i</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Modal -->
+        <div id="infoModal" class="modal hidden">
+            <div class="modal-content">
+                <button class="modal-close" onclick="hideInfo()">×</button>
+                <div id="placeInfoContent"></div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="loading-spinner"></div>
+            <p>Загружаем...</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
