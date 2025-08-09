@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}LoveRoute - Романтические маршруты по России{% endblock %}
+
+{% block content %}
+<div class="relative min-h-screen flex items-center justify-center px-4">
+    <!-- Hero Section -->
+    <div class="max-w-4xl mx-auto text-center">
+        <!-- Main Logo -->
+        <div class="flex justify-center mb-8">
+            <div class="w-20 h-20 bg-gradient-to-r from-cordovan via-marvelous to-new-york-pink rounded-full flex items-center justify-center animate-pulse-slow">
+                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-5xl md:text-6xl font-bold text-black-bean mb-6 animate-fade-in">
+            Love<span class="text-cordovan">Route</span>
+        </h1>
+        
+        <!-- Subtitle -->
+        <p class="text-xl md:text-2xl text-black-bean/80 mb-8 animate-fade-in-delay">
+            Найдите идеальные романтические места в России
+        </p>
+        
+        <!-- Description -->
+        <p class="text-lg text-black-bean/70 mb-12 max-w-2xl mx-auto animate-fade-in-delay-2">
+            Откройте для себя самые красивые и романтические места России с помощью уникального Tinder-стиля свайпов. Создавайте персональные маршруты для незабываемых путешествий вдвоем.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-3">
+            <a href="{{ url_for('register') }}" 
+               class="bg-gradient-to-r from-cordovan to-marvelous text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg hover:scale-105 transform transition-all duration-300">
+                Начать путешествие
+            </a>
+            <a href="{{ url_for('login') }}" 
+               class="bg-white/90 backdrop-blur-sm text-black-bean px-8 py-4 rounded-xl font-semibold text-lg border-2 border-cordovan/20 hover:border-cordovan/40 hover:shadow-lg transform transition-all duration-300">
+                Уже есть аккаунт
+            </a>
+        </div>
+
+        <!-- Features -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 animate-fade-in-delay-4">
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/80 transition-all duration-300">
+                <div class="w-12 h-12 bg-gradient-to-r from-cordovan to-marvelous rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-black-bean mb-2">420+ романтических мест</h3>
+                <p class="text-black-bean/70">Тщательно отобранные локации по всей России для идеальных свиданий</p>
+            </div>
+
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/80 transition-all duration-300">
+                <div class="w-12 h-12 bg-gradient-to-r from-cordovan to-marvelous rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-black-bean mb-2">Tinder-стиль свайпы</h3>
+                <p class="text-black-bean/70">Простой и увлекательный способ выбирать места по вашему вкусу</p>
+            </div>
+
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/80 transition-all duration-300">
+                <div class="w-12 h-12 bg-gradient-to-r from-cordovan to-marvelous rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-black-bean mb-2">Персональные маршруты</h3>
+                <p class="text-black-bean/70">Создавайте уникальные маршруты на основе ваших предпочтений</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Hearts Animation -->
+    <div class="floating-hearts">
+        <div class="heart heart-1">💕</div>
+        <div class="heart heart-2">💖</div>
+        <div class="heart heart-3">💗</div>
+        <div class="heart heart-4">💝</div>
+        <div class="heart heart-5">💞</div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<section class="py-16 bg-white/30 backdrop-blur-sm">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <div class="text-3xl md:text-4xl font-bold text-cordovan mb-2">21</div>
+                <div class="text-black-bean/70">городов</div>
+            </div>
+            <div>
+                <div class="text-3xl md:text-4xl font-bold text-cordovan mb-2">420+</div>
+                <div class="text-black-bean/70">мест</div>
+            </div>
+            <div>
+                <div class="text-3xl md:text-4xl font-bold text-cordovan mb-2">1000+</div>
+                <div class="text-black-bean/70">пользователей</div>
+            </div>
+            <div>
+                <div class="text-3xl md:text-4xl font-bold text-cordovan mb-2">5000+</div>
+                <div class="text-black-bean/70">создано маршрутов</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Custom animations */
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-slow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-10px) rotate(5deg); }
+    66% { transform: translateY(-5px) rotate(-5deg); }
+}
+
+.animate-fade-in { animation: fade-in 0.6s ease-out; }
+.animate-fade-in-delay { animation: fade-in 0.6s ease-out 0.2s both; }
+.animate-fade-in-delay-2 { animation: fade-in 0.6s ease-out 0.4s both; }
+.animate-fade-in-delay-3 { animation: fade-in 0.6s ease-out 0.6s both; }
+.animate-fade-in-delay-4 { animation: fade-in 0.6s ease-out 0.8s both; }
+.animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+
+.floating-hearts {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.heart {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+}
+
+.heart-1 { top: 20%; left: 10%; animation-delay: 0s; }
+.heart-2 { top: 60%; left: 80%; animation-delay: 1s; }
+.heart-3 { top: 80%; left: 20%; animation-delay: 2s; }
+.heart-4 { top: 30%; left: 70%; animation-delay: 3s; }
+.heart-5 { top: 50%; left: 90%; animation-delay: 4s; }
+</style>
+{% endblock %}
+{% endblock %}

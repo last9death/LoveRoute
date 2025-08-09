@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Мои маршруты - LoveRoute{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-black-bean mb-4">Ваши романтические маршруты</h1>
+            <p class="text-lg text-black-bean/70 max-w-2xl mx-auto">
+                Здесь собраны все маршруты, созданные на основе ваших предпочтений. 
+                Выберите понравившийся и отправляйтесь в незабываемое путешествие.
+            </p>
+        </div>
+
+        {% if routes %}
+            <!-- Routes Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for route in routes %}
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                    <!-- Route Header -->
+                    <div class="bg-gradient-to-r from-cordovan to-marvelous p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">{{ route.name }}</h3>
+                        <div class="flex items-center justify-between text-sm opacity-90">
+                            <span>{{ route.count }} мест</span>
+                            <span>{{ route.created_at[:10] }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Route Content -->
+                    <div class="p-6">
+                        <!-- Places Preview -->
+                        <div class="space-y-3 mb-6">
+                            {% for place in route.places[:3] %}
+                            <div class="flex items-center space-x-3 p-3 bg-baby-pink/30 rounded-lg">
+                                <div class="w-12 h-12 bg-gradient-to-r from-cordovan to-marvelous rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                    {{ loop.index }}
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-black-bean">{{ place.name }}</h4>
+                                    <p class="text-sm text-black-bean/70">{{ place.cityId.upper() }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                            {% if route.count > 3 %}
+                            <div class="text-center text-sm text-black-bean/70 py-2">
+                                и еще {{ route.count - 3 }} мест...
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex space-x-3">
+                            <button onclick="viewRoute('{{ route.name }}')" 
+                                    class="flex-1 bg-gradient-to-r from-cordovan to-marvelous text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                                Посмотреть
+                            </button>
+                            <button onclick="shareRoute('{{ route.name }}')" 
+                                    class="bg-white border-2 border-cordovan text-cordovan py-3 px-4 rounded-lg font-semibold hover:bg-cordovan hover:text-white transition-all duration-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Statistics -->
+            <div class="mt-16 bg-white/60 backdrop-blur-sm rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-black-bean mb-6 text-center">Ваша статистика</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-cordovan mb-2">{{ routes|length }}</div>
+                        <div class="text-sm text-black-bean/70">маршрутов создано</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-cordovan mb-2">{{ routes|sum(attribute='count') }}</div>
+                        <div class="text-sm text-black-bean/70">мест добавлено</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-cordovan mb-2">{{ routes|map(attribute='places')|map('length')|max or 0 }}</div>
+                        <div class="text-sm text-black-bean/70">самый длинный маршрут</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-cordovan mb-2">❤️</div>
+                        <div class="text-sm text-black-bean/70">романтический рейтинг</div>
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-16">
+                <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-12 max-w-lg mx-auto">
+                    <div class="w-24 h-24 bg-gradient-to-r from-cordovan to-marvelous rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-black-bean mb-4">Пока нет маршрутов</h3>
+                    <p class="text-black-bean/70 mb-8">
+                        Начните свайпать места, которые вам нравятся, и мы автоматически создадим для вас персональные романтические маршруты.
+                    </p>
+                    <a href="{{ url_for('swipe') }}" 
+                       class="inline-flex items-center bg-gradient-to-r from-cordovan to-marvelous text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                        </svg>
+                        Начать свайпать
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Create Custom Route -->
+        <div class="mt-16 text-center">
+            <button onclick="createCustomRoute()" 
+                    class="bg-white/90 backdrop-blur-sm border-2 border-cordovan text-cordovan px-8 py-4 rounded-lg font-semibold hover:bg-cordovan hover:text-white transition-all duration-300 transform hover:scale-105">
+                Создать свой маршрут
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Route Details Modal -->
+<div id="routeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-90vh overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modalTitle" class="text-2xl font-bold text-black-bean"></h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function viewRoute(routeName) {
+    // Implementation for viewing route details
+    document.getElementById('modalTitle').textContent = routeName;
+    document.getElementById('modalContent').innerHTML = `
+        <div class="space-y-4">
+            <p class="text-black-bean/70">Детальная информация о маршруте "${routeName}" будет здесь.</p>
+            <div class="bg-gradient-to-r from-baby-pink to-new-york-pink p-4 rounded-lg">
+                <p class="text-black-bean">Функционал просмотра маршрута в разработке...</p>
+            </div>
+        </div>
+    `;
+    document.getElementById('routeModal').classList.remove('hidden');
+}
+
+function shareRoute(routeName) {
+    if (navigator.share) {
+        navigator.share({
+            title: 'LoveRoute - ' + routeName,
+            text: 'Посмотрите мой романтический маршрут!',
+            url: window.location.href
+        });
+    } else {
+        // Fallback for browsers that don't support Web Share API
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Ссылка скопирована в буфер обмена!');
+        });
+    }
+}
+
+function createCustomRoute() {
+    // Implementation for creating custom route
+    alert('Функционал создания пользовательских маршрутов в разработке!');
+}
+
+function closeModal() {
+    document.getElementById('routeModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('routeModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Страница не найдена - LoveRoute{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4">
+    <div class="max-w-lg mx-auto text-center">
+        <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-12 shadow-lg">
+            <!-- 404 Icon -->
+            <div class="w-24 h-24 bg-gradient-to-r from-cordovan to-marvelous rounded-full flex items-center justify-center mx-auto mb-8">
+                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.22 0-4.265.9-5.738 2.36M15 11.172a4 4 0 000-5.656M9 11.172a4 4 0 010-5.656"/>
+                </svg>
+            </div>
+
+            <!-- Error Message -->
+            <h1 class="text-6xl font-bold text-cordovan mb-4">404</h1>
+            <h2 class="text-2xl font-bold text-black-bean mb-4">Страница не найдена</h2>
+            <p class="text-black-bean/70 mb-8">
+                Похоже, что эта страница отправилась в романтическое путешествие без нас. 
+                Давайте найдем что-то лучше!
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="space-y-4">
+                <a href="{{ url_for('index') }}" 
+                   class="block bg-gradient-to-r from-cordovan to-marvelous text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                    На главную
+                </a>
+                
+                {% if session.user_id %}
+                <a href="{{ url_for('swipe') }}" 
+                   class="block bg-white border-2 border-cordovan text-cordovan px-8 py-4 rounded-lg font-semibold hover:bg-cordovan hover:text-white transition-all duration-300">
+                    К свайпам
+                </a>
+                {% else %}
+                <a href="{{ url_for('register') }}" 
+                   class="block bg-white border-2 border-cordovan text-cordovan px-8 py-4 rounded-lg font-semibold hover:bg-cordovan hover:text-white transition-all duration-300">
+                    Присоединиться
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Popular Links -->
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <h3 class="text-lg font-semibold text-black-bean mb-4">Популярные страницы</h3>
+                <div class="grid grid-cols-1 gap-2">
+                    <a href="{{ url_for('index') }}" class="text-cordovan hover:text-cordovan/80 transition-colors">Главная страница</a>
+                    {% if session.user_id %}
+                        <a href="{{ url_for('swipe') }}" class="text-cordovan hover:text-cordovan/80 transition-colors">Свайпы</a>
+                        <a href="{{ url_for('routes') }}" class="text-cordovan hover:text-cordovan/80 transition-colors">Мои маршруты</a>
+                    {% else %}
+                        <a href="{{ url_for('register') }}" class="text-cordovan hover:text-cordovan/80 transition-colors">Регистрация</a>
+                        <a href="{{ url_for('login') }}" class="text-cordovan hover:text-cordovan/80 transition-colors">Вход</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

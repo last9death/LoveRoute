@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация - LoveRoute{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-r from-cordovan via-marvelous to-new-york-pink rounded-full flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+            </div>
+            <h2 class="text-3xl font-bold text-black-bean">Присоединяйтесь к LoveRoute</h2>
+            <p class="mt-2 text-sm text-black-bean/70">Создайте аккаунт и начните находить романтические места</p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8">
+            <form method="POST" class="space-y-6">
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-black-bean mb-2">
+                        Email адрес
+                    </label>
+                    <input id="email" 
+                           name="email" 
+                           type="email" 
+                           required 
+                           class="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-cordovan focus:border-cordovan focus:z-10 sm:text-sm"
+                           placeholder="Введите ваш email">
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-black-bean mb-2">
+                        Пароль
+                    </label>
+                    <input id="password" 
+                           name="password" 
+                           type="password" 
+                           required 
+                           minlength="6"
+                           class="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-cordovan focus:border-cordovan focus:z-10 sm:text-sm"
+                           placeholder="Минимум 6 символов">
+                </div>
+
+                <!-- City Selection -->
+                <div>
+                    <label for="city" class="block text-sm font-medium text-black-bean mb-2">
+                        Ваш город
+                    </label>
+                    <select id="city" 
+                            name="city" 
+                            required
+                            class="appearance-none relative block w-full px-3 py-3 border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-cordovan focus:border-cordovan focus:z-10 sm:text-sm">
+                        <option value="">Выберите город</option>
+                        {% for city in cities %}
+                            <option value="{{ city.id }}">{{ city.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" 
+                            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-cordovan to-marvelous hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cordovan transition-all duration-300 transform hover:scale-105">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <svg class="h-5 w-5 text-white group-hover:text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </span>
+                        Создать аккаунт
+                    </button>
+                </div>
+
+                <!-- Login Link -->
+                <div class="text-center">
+                    <p class="text-sm text-black-bean/70">
+                        Уже есть аккаунт?
+                        <a href="{{ url_for('login') }}" class="font-medium text-cordovan hover:text-cordovan/80 transition-colors">
+                            Войти
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Features Preview -->
+        <div class="grid grid-cols-1 gap-4 mt-8">
+            <div class="bg-white/60 backdrop-blur-sm rounded-xl p-4 text-center">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <svg class="w-5 h-5 text-cordovan" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="font-semibold text-black-bean">420+ романтических мест</span>
+                </div>
+                <p class="text-sm text-black-bean/70">Откройте для себя самые красивые места вашего города</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

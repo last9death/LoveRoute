@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Ошибка сервера - LoveRoute{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4">
+    <div class="max-w-lg mx-auto text-center">
+        <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-12 shadow-lg">
+            <!-- 500 Icon -->
+            <div class="w-24 h-24 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+
+            <!-- Error Message -->
+            <h1 class="text-6xl font-bold text-red-500 mb-4">500</h1>
+            <h2 class="text-2xl font-bold text-black-bean mb-4">Ошибка сервера</h2>
+            <p class="text-black-bean/70 mb-8">
+                Упс! Что-то пошло не так на нашем сервере. Наши разработчики уже работают над исправлением. 
+                Попробуйте обновить страницу или вернуться позже.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="space-y-4">
+                <button onclick="window.location.reload()" 
+                        class="block w-full bg-gradient-to-r from-cordovan to-marvelous text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                    Обновить страницу
+                </button>
+                
+                <a href="{{ url_for('index') }}" 
+                   class="block bg-white border-2 border-cordovan text-cordovan px-8 py-4 rounded-lg font-semibold hover:bg-cordovan hover:text-white transition-all duration-300">
+                    На главную
+                </a>
+            </div>
+
+            <!-- Error Details (только в режиме отладки) -->
+            {% if config.DEBUG %}
+            <div class="mt-8 pt-8 border-t border-gray-200 text-left">
+                <h3 class="text-lg font-semibold text-black-bean mb-4">Детали ошибки (режим отладки)</h3>
+                <div class="bg-gray-100 p-4 rounded-lg text-sm text-gray-700 font-mono">
+                    {{ error_details|default('Детали ошибки недоступны') }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Support Info -->
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <h3 class="text-lg font-semibold text-black-bean mb-4">Нужна помощь?</h3>
+                <p class="text-sm text-black-bean/70 mb-4">
+                    Если проблема продолжается, свяжитесь с нашей службой поддержки.
+                </p>
+                <div class="grid grid-cols-1 gap-2">
+                    <a href="mailto:support@loveroute.ru" class="text-cordovan hover:text-cordovan/80 transition-colors">
+                        📧 support@loveroute.ru
+                    </a>
+                    <a href="#" class="text-cordovan hover:text-cordovan/80 transition-colors">
+                        💬 Онлайн-чат поддержки
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

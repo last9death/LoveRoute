@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block title %}Свайпы - LoveRoute{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8">
+    <div class="max-w-md mx-auto px-4">
+        <!-- Progress Header -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 mb-6 shadow-lg">
+            <div class="flex items-center justify-between mb-4">
+                <h1 class="text-2xl font-bold text-black-bean">Выберите места</h1>
+                <div class="text-right">
+                    <div class="text-2xl font-bold text-cordovan" id="progress-count">{{ swiped_count }}/{{ total_places }}</div>
+                    <div class="text-sm text-black-bean/60">просмотрено</div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-baby-pink rounded-full h-2">
+                <div class="bg-gradient-to-r from-cordovan to-marvelous h-2 rounded-full transition-all duration-300" 
+                     style="width: {{ (swiped_count / total_places * 100) if total_places > 0 else 0 }}%"
+                     id="progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Swipe Cards Container -->
+        <div class="relative h-96" id="cards-container">
+            {% if places %}
+                {% for place in places[:3] %}
+                <div class="swipe-card absolute inset-0 bg-white rounded-2xl shadow-2xl overflow-hidden cursor-grab active:cursor-grabbing" 
+                     data-place-id="{{ place.id }}"
+                     style="z-index: {{ 3 - loop.index0 }}; transform: scale({{ 1 - loop.index0 * 0.02 }}) translateY({{ loop.index0 * 4 }}px);">
+                    
+                    <!-- Image -->
+                    <div class="h-64 bg-gradient-to-br from-baby-pink to-new-york-pink relative overflow-hidden">
+                        <img src="{{ url_for('static', filename='images/' + place.cityId + '/' + place.id + '.webp') }}" 
+                             alt="{{ place.name }}"
+                             class="w-full h-full object-cover"
+                             onerror="this.src='{{ url_for('static', filename='images/placeholder.webp') }}'">
+                        
+                        <!-- Gradient Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                        
+                        <!-- Location Badge -->
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
+                            <span class="text-sm font-medium text-black-bean">{{ place.cityId.upper() }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-black-bean mb-2">{{ place.name }}</h3>
+                        <p class="text-black-bean/70 mb-4 line-clamp-3">{{ place.description or 'Романтическое место для незабываемых моментов вдвоем.' }}</p>
+                        
+                        <!-- Tags -->
+                        {% if place.tags %}
+                        <div class="flex flex-wrap gap-2">
+                            {% for tag in place.tags[:3] %}
+                            <span class="bg-baby-pink text-black-bean text-xs px-2 py-1 rounded-full">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Swipe Actions -->
+                    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-4">
+                        <button class="skip-btn w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors shadow-lg"
+                                onclick="handleSwipe('skip')">
+                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                        
+                        <button class="like-btn w-14 h-14 bg-gradient-to-r from-cordovan to-marvelous rounded-full flex items-center justify-center hover:shadow-lg transition-all shadow-lg"
+                                onclick="handleSwipe('like')">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Swipe Indicators -->
+                    <div class="swipe-indicator like-indicator absolute inset-0 bg-green-500/20 flex items-center justify-center opacity-0 transition-opacity">
+                        <div class="bg-green-500 text-white px-6 py-3 rounded-full font-bold text-xl transform rotate-12">
+                            НРАВИТСЯ!
+                        </div>
+                    </div>
+                    
+                    <div class="swipe-indicator skip-indicator absolute inset-0 bg-red-500/20 flex items-center justify-center opacity-0 transition-opacity">
+                        <div class="bg-red-500 text-white px-6 py-3 rounded-full font-bold text-xl transform -rotate-12">
+                            ПРОПУСТИТЬ
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- No More Cards -->
+                <div class="no-more-cards absolute inset-0 bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center text-center p-8">
+                    <div class="w-20 h-20 bg-gradient-to-r from-cordovan to-marvelous rounded-full flex items-center justify-center mb-6">
+                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-black-bean mb-4">Отлично!</h3>
+                    <p class="text-black-bean/70 mb-6">Вы просмотрели все места в вашем городе. Теперь можете создать маршрут из понравившихся мест.</p>
+                    <a href="{{ url_for('routes') }}" class="bg-gradient-to-r from-cordovan to-marvelous text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
+                        Посмотреть маршруты
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="hidden text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cordovan"></div>
+            <p class="text-black-bean/70 mt-2">Загружаем новые места...</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentCardIndex = 0;
+let isAnimating = false;
+let remainingPlaces = {{ places | length }};
+
+// Touch and mouse event handling
+let startX = 0;
+let startY = 0;
+let currentX = 0;
+let currentY = 0;
+let isDragging = false;
+
+function handleSwipe(action) {
+    if (isAnimating) return;
+    
+    const currentCard = document.querySelector('.swipe-card[style*="z-index: 2"], .swipe-card[style*="z-index: 3"]');
+    if (!currentCard) return;
+    
+    const placeId = currentCard.dataset.placeId;
+    swipeCard(currentCard, action, placeId);
+}
+
+function swipeCard(card, action, placeId) {
+    if (isAnimating) return;
+    isAnimating = true;
+    
+    // Show indicator
+    const indicator = card.querySelector(`.${action}-indicator`);
+    if (indicator) {
+        indicator.style.opacity = '1';
+    }
+    
+    // Animate card out
+    const direction = action === 'like' ? 1 : -1;
+    card.style.transform = `translateX(${direction * 100}%) rotate(${direction * 15}deg)`;
+    card.style.opacity = '0';
+    
+    // Send to server
+    fetch('/api/swipe', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            place_id: placeId,
+            action: action
+        })
+    }).catch(console.error);
+    
+    setTimeout(() => {
+        card.remove();
+        remainingPlaces--;
+        updateProgress();
+        loadNextCard();
+        isAnimating = false;
+    }, 300);
+}
+
+function updateProgress() {
+    const progressCount = document.getElementById('progress-count');
+    const progressBar = document.getElementById('progress-bar');
+    const totalPlaces = {{ total_places }};
+    const swipedCount = totalPlaces - remainingPlaces;
+    
+    if (progressCount) {
+        progressCount.textContent = `${swipedCount}/${totalPlaces}`;
+    }
+    
+    if (progressBar) {
+        const percentage = totalPlaces > 0 ? (swipedCount / totalPlaces * 100) : 0;
+        progressBar.style.width = `${percentage}%`;
+    }
+}
+
+function loadNextCard() {
+    const container = document.getElementById('cards-container');
+    const cards = container.querySelectorAll('.swipe-card');
+    
+    if (cards.length === 0) {
+        // Show completion state
+        const noMoreCards = document.createElement('div');
+        noMoreCards.className = 'no-more-cards absolute inset-0 bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center text-center p-8';
+        noMoreCards.innerHTML = `
+            <div class="w-20 h-20 bg-gradient-to-r from-cordovan to-marvelous rounded-full flex items-center justify-center mb-6">
+                <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-black-bean mb-4">Отлично!</h3>
+            <p class="text-black-bean/70 mb-6">Вы просмотрели все места в вашем городе. Теперь можете создать маршрут из понравившихся мест.</p>
+            <a href="{{ url_for('routes') }}" class="bg-gradient-to-r from-cordovan to-marvelous text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
+                Посмотреть маршруты
+            </a>
+        `;
+        container.appendChild(noMoreCards);
+        return;
+    }
+    
+    // Update z-index for remaining cards
+    cards.forEach((card, index) => {
+        card.style.zIndex = cards.length - index;
+        card.style.transform = `scale(${1 - index * 0.02}) translateY(${index * 4}px)`;
+    });
+}
+
+// Touch/Mouse event handlers
+function handleStart(e) {
+    if (isAnimating) return;
+    
+    const touch = e.touches ? e.touches[0] : e;
+    startX = touch.clientX;
+    startY = touch.clientY;
+    isDragging = true;
+    
+    const currentCard = getCurrentCard();
+    if (currentCard) {
+        currentCard.style.transition = 'none';
+    }
+}
+
+function handleMove(e) {
+    if (!isDragging || isAnimating) return;
+    
+    e.preventDefault();
+    const touch = e.touches ? e.touches[0] : e;
+    currentX = touch.clientX - startX;
+    currentY = touch.clientY - startY;
+    
+    const currentCard = getCurrentCard();
+    if (!currentCard) return;
+    
+    const rotation = currentX * 0.1;
+    const opacity = Math.max(0.5, 1 - Math.abs(currentX) / 300);
+    
+    currentCard.style.transform = `translateX(${currentX}px) translateY(${currentY}px) rotate(${rotation}deg)`;
+    currentCard.style.opacity = opacity;
+    
+    // Show indicators based on swipe direction
+    const likeIndicator = currentCard.querySelector('.like-indicator');
+    const skipIndicator = currentCard.querySelector('.skip-indicator');
+    
+    if (currentX > 50) {
+        likeIndicator.style.opacity = Math.min(1, currentX / 150);
+        skipIndicator.style.opacity = 0;
+    } else if (currentX < -50) {
+        skipIndicator.style.opacity = Math.min(1, Math.abs(currentX) / 150);
+        likeIndicator.style.opacity = 0;
+    } else {
+        likeIndicator.style.opacity = 0;
+        skipIndicator.style.opacity = 0;
+    }
+}
+
+function handleEnd(e) {
+    if (!isDragging || isAnimating) return;
+    
+    isDragging = false;
+    const currentCard = getCurrentCard();
+    if (!currentCard) return;
+    
+    currentCard.style.transition = 'all 0.3s ease-out';
+    
+    const threshold = 100;
+    
+    if (Math.abs(currentX) > threshold) {
+        const action = currentX > 0 ? 'like' : 'skip';
+        const placeId = currentCard.dataset.placeId;
+        swipeCard(currentCard, action, placeId);
+    } else {
+        // Snap back
+        currentCard.style.transform = 'translateX(0) translateY(0) rotate(0deg)';
+        currentCard.style.opacity = '1';
+        currentCard.querySelector('.like-indicator').style.opacity = '0';
+        currentCard.querySelector('.skip-indicator').style.opacity = '0';
+    }
+    
+    currentX = 0;
+    currentY = 0;
+}
+
+function getCurrentCard() {
+    return document.querySelector('.swipe-card[style*="z-index: 2"], .swipe-card[style*="z-index: 3"]') || 
+           document.querySelector('.swipe-card');
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('cards-container');
+    
+    // Touch events
+    container.addEventListener('touchstart', handleStart, { passive: false });
+    container.addEventListener('touchmove', handleMove, { passive: false });
+    container.addEventListener('touchend', handleEnd);
+    
+    // Mouse events
+    container.addEventListener('mousedown', handleStart);
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleEnd);
+    
+    // Keyboard events
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') {
+            handleSwipe('skip');
+        } else if (e.key === 'ArrowRight') {
+            handleSwipe('like');
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}
